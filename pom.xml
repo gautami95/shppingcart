@@ -19,10 +19,10 @@
     <!-- maven dependancy -->
     <!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->
 <dependency>
-    <groupId>org.seleniumhq.selenium</groupId>
-    <artifactId>selenium-java</artifactId>
-    <version>3.14.0</version>
-</dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-java</artifactId>
+			<version>3.9.0</version>
+		</dependency>
 
 <!-- testng dependancy -->
 <!-- https://mvnrepository.com/artifact/org.testng/testng -->
@@ -32,6 +32,12 @@
     <version>6.14.3</version>
     <scope>test</scope>
 </dependency>
+
+<dependency>
+		 <groupId>com.aventstack</groupId> 
+		 <artifactId>extentreports</artifactId> 
+		<version>4.0.9</version>
+		 </dependency> 
 
 <!-- log4j dependancy -->
 <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
