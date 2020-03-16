@@ -1,34 +1,36 @@
 package com.Util;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Set;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
-/*import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.NoSuchWindowException;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.testng.Assert;*/
 import org.testng.asserts.SoftAssert;
-
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
-import com.aventstack.extentreports.MediaEntityBuilder;
-import com.aventstack.extentreports.MediaEntityModelProvider;
 import com.aventstack.extentreports.Status;
 import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
 import com.aventstack.extentreports.reporter.configuration.Theme;
 
+import com.basetest.TestBase;
+
 public class Utility {
-	/*private static int COUNTER = 1;
+	private static int COUNTER = 1;
 	public static SoftAssert assertion;
-//	private static final Logger LOGGER = LoggerFactory.getLogger(Utility.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(Utility.class);
 
 	static int EXPLICIT_WAIT = 15;
 
@@ -37,46 +39,45 @@ public class Utility {
 	private static final String REPORT_NAME = "extent.html";
 
 	private final static boolean SUCCESS = true;
-	public static WebDriver driver;
 
 	private final static boolean FAIL = false;
-	public final static String AUTOMATION_SCREENSHOT_PATH = System.getProperty("user.dir")+"//reports//screenshots//";
+	public final static String AUTOMATION_SCREENSHOT_PATH = System.getProperty("user.dir") + "//reports//screenshots//";
 
 	public Utility() {
 
 		assertion = new SoftAssert();
 	}
-	
-	
-public static void info(ExtentTest childTest, String message) {
-		
+
+	public static void info(ExtentTest childTest, String message) {
+
 		childTest.log(Status.INFO, message);
 	}
 
 	public static void pass(ExtentTest childTest, String message) {
-		
+
 		childTest.log(Status.PASS, message);
 	}
 
 	public static void fail(ExtentTest childTest, String message) {
-		
+
 		childTest.log(Status.FAIL, message);
-		//return test;
 
 	}
-	
+
+
+
 	public void assertAll() {
 
 		assertion.assertAll();
 	}
 
-	public void assertEqual(String stepName, String expected, String actual, boolean screenshot) {
+	public void assertEqual(String expected, String actual, boolean screenshot,ExtentTest childTest) {
 		assertion.assertEquals(actual, expected);
-		this.postAssert(stepName, expected, actual, screenshot);
+		this.postAssert( expected, actual, screenshot,childTest);
 
 	}
-	
-	private  void postAssert(String stepName,String  expected,String  actual, boolean screenshot) {
+
+	private  void postAssert(String expected, String actual, boolean screenshot,ExtentTest childTest) {
 
 		Status logStatus = Status.PASS;
 
@@ -85,42 +86,39 @@ public static void info(ExtentTest childTest, String message) {
 			logStatus = Status.FAIL;
 		}
 
-
-		
 		if (screenshot) {
 
 			try {
-				
+
 				String screenshotpath = screenShot();
+				childTest.addScreenCaptureFromPath(screenshotpath);
 				
+
 			} catch (IOException e) {
 
 				LOGGER.error("Exeption in postAssert: " + e.getMessage());
-				
+
 				e.printStackTrace();
 
 			}
 		}
 
 	}
-	
-	public String screenShot() throws IOException {
 
-	//	File screenshotsource = ((TakesScreenshot) TestBase.driver).getScreenshotAs(OutputType.FILE);
+	public  String screenShot() throws IOException {
+
+		File screenshotsource = ((TakesScreenshot) TestBase.driver).getScreenshotAs(OutputType.FILE);
 
 		SimpleDateFormat sdf = new SimpleDateFormat("dd_MM_yyy_hh_mm_ss_a");
 
-		String fileName = AUTOMATION_SCREENSHOT_PATH + "Screenshot_" + (++COUNTER) + sdf.format(new Date())
-				+ ".png";
+		String fileName = AUTOMATION_SCREENSHOT_PATH + "Screenshot_" + (++COUNTER) + sdf.format(new Date()) + ".png";
 
-	//	FileUtils.copyFile(screenshotsource, new File(fileName));
+	   FileUtils.copyFile(screenshotsource, new File(fileName));
 
 		return fileName;
 
 	}
-	
-	
-		
+
 	public static ExtentReports getInstance() {
 		if (extent == null)
 			createInstance(REPORT_NAME);
@@ -214,34 +212,86 @@ public static void info(ExtentTest childTest, String message) {
 		return TestBase.driver.getWindowHandles();
 	}
 
-	public static boolean waitForWindow(int windowNum, int TimeOut) {
+	// files utility
 
-		boolean windowFound = false;
-
-		int secondCounter = 0;
-
-		while (!windowFound) {
-
-			try {
-				if (getCountofOpenWindows() >= windowNum) {
-					windowFound = true;
-					Thread.sleep(1000);
-					return true;
-				}
-
-				Thread.sleep(1000);
-				secondCounter++;
-				if (secondCounter >= TimeOut) {
-					return false;
-				}
-			} catch (Exception e) {
-
-				// AutomationContextManager.getMethod().log(Status.ERROR,
-				// e.getMessage());
-
+	// create file
+	public void createFile(String filepath) {
+		File f = new File(filepath);
+		try {
+			if (f.createNewFile()) {
+				System.out.println("File got created");
+			} else {
+				System.out.println("File already created");
 			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	// rename file
+	public void Renamefile(String source, String Destination) {
+		File file = new File(source);
+		File renemefile = new File(Destination);
+		if (file.renameTo(renemefile)) {
+			System.out.println(" file got rename " + renemefile);
+		} else {
+			System.out.println("file not rename");
+		}
+	}
+
+	// copy file(source to destination)
+	public void copyFile(String source, String destination) throws Exception {
+		File sourcefile = new File(source);
+		File destinationfile = new File(destination);
+
+		try {
+			System.out.println(" Start " + sourcefile);
+			Files.copy(sourcefile.toPath(), destinationfile.toPath());
+			System.out.println(" finish " + destinationfile);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	// Zip file path
+
+	public void zipFile(String Sourcefile, String filename, String Destinationfile) throws IndexOutOfBoundsException {
+
+		byte[] bytesize1 = new byte[1024];
+
+		try {
+			FileOutputStream fos1 = new FileOutputStream(Sourcefile);
+			ZipOutputStream zos = new ZipOutputStream(fos1);
+			ZipEntry ze = new ZipEntry(filename);
+			zos.putNextEntry(ze);
+			FileInputStream fis1 = new FileInputStream(Destinationfile);
+
+			int z;
+			while ((z = fis1.read(bytesize1)) > 0) {
+				zos.write(bytesize1, 0, z);
+			}
+
+			fis1.close();
+			zos.closeEntry();
+			zos.close();
+
+			System.out.println("zip file name is Done");
+
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 
-		return windowFound;
 	}
-*/}
+
+	// delete all file
+	public void Deletefile(String filepath) {
+		File file1 = new File(filepath);
+		if (file1.delete()) {
+			System.out.println(" file got deleted: " + file1);
+		} else {
+			System.out.println("file not deleted");
+		}
+
+	}
+
+}
