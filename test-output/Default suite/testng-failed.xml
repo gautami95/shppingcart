@@ -5,9 +5,11 @@
     <classes>
       <class name="com.test.LoginTest">
         <methods>
+          <include name="getClassName"/>
+          <include name="setUpSuite"/>
           <include name="intialization"/>
+          <include name="checkErrorMessageForPassword"/>
           <include name="closeBrowser"/>
-          <include name="checkErrorMessage1"/>
         </methods>
       </class> <!-- com.test.LoginTest -->
     </classes>

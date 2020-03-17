@@ -2,9 +2,6 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="Suite">
   <test name="Test">
-    <classes>
-      <class name="com.jbk.TestCase1"/>
-      <class name="com.jbk.Testcase2"/>
-    </classes>
+   
   </test> <!-- Test -->
 </suite> <!-- Suite -->

@@ -3,22 +3,15 @@
 <suite guice-stage="DEVELOPMENT" name="Failed suite [Suite]">
   <test thread-count="5" name="Test(failed)">
     <classes>
-      <class name="com.jbk.TestCase1">
+      <class name="com.test.LoginTest">
         <methods>
-          <include name="checklogIn"/>
-          <include name="setup"/>
-          <include name="close"/>
-          <include name="checktitle"/>
+          <include name="getClassName"/>
+          <include name="setUpSuite"/>
+          <include name="intialization"/>
+          <include name="checkErrorMessageForPassword"/>
+          <include name="closeBrowser"/>
         </methods>
-      </class> <!-- com.jbk.TestCase1 -->
-      <class name="com.jbk.Testcase2">
-        <methods>
-          <include name="checkUsersTitle"/>
-          <include name="close"/>
-          <include name="checkTitle"/>
-          <include name="setup"/>
-        </methods>
-      </class> <!-- com.jbk.Testcase2 -->
+      </class> <!-- com.test.LoginTest -->
     </classes>
   </test> <!-- Test(failed) -->
 </suite> <!-- Failed suite [Suite] -->

@@ -9,8 +9,9 @@ import org.openqa.selenium.WebDriver;
 
 
 public class Base {
-	public static WebDriver driver;
+	
 	public static Properties prop;
+	public static WebDriver driver;
 	
 	public Base(){
 		try {
